@@ -1,0 +1,7 @@
+# Treat JavaScript files/bundles as vendored so they don't count toward repo languages
+*.js linguist-vendored
+
+# Explicitly count Java files
+*.java linguist-detectable=true
+
+
