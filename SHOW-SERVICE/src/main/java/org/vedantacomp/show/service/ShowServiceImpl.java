@@ -1,0 +1,25 @@
+package org.vedantacomp.show.service;
+
+import org.springframework.stereotype.Service;
+import org.vedantacomp.common.dto.ShowDto;
+import org.vedantacomp.show.mapper.ShowMapper;
+import org.vedantacomp.show.repository.ShowRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@Service
+public class ShowServiceImpl implements ShowService {
+	
+	private final ShowRepository showRepository;
+	private final ShowMapper showMapper;
+
+
+	@Override
+	public ShowDto getShowById(Long id) {
+		return showMapper.toDto(showRepository.findById(id).orElseThrow(() -> new RuntimeException("Show not found with id: " + id)));
+	}
+
+}

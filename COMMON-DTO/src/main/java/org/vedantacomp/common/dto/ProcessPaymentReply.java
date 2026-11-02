@@ -1,0 +1,15 @@
+package org.vedantacomp.common.dto;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+import lombok.Builder;
+@Builder
+public record ProcessPaymentReply(
+		UUID sagaId,
+		Long bookingId,
+		String paymentId,
+		PaymentStatus status,
+		String failureReason,
+		BigDecimal amount
+		) {}

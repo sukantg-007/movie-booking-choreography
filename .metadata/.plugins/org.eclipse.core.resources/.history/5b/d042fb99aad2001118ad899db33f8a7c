@@ -1,0 +1,11 @@
+package org.vedantacomp.seat.dto;
+
+import lombok.Builder;
+
+@Builder
+public record SeatAllocationCommand(
+		Long
+		
+		
+		) {
+}

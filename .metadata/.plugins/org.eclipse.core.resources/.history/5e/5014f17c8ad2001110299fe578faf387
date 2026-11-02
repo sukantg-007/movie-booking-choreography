@@ -1,0 +1,22 @@
+package org.vedantacomp.saga.service;
+
+import java.util.UUID;
+
+import org.vedantacomp.saga.dto.BookingCreatedEvent;
+import org.vedantacomp.saga.dto.ProcessPaymentReply;
+import org.vedantacomp.saga.dto.SagaDto;
+import org.vedantacomp.saga.dto.SeatAllocationReply;
+
+public interface SagaOrchestratorService {
+
+    
+    SagaDto getSagaByBookingId(Long bookingId);
+
+	void handleBookingCreatedEvent(BookingCreatedEvent event);
+
+	void handleSeatAllocationReply(SeatAllocationReply reply);
+
+	void handleProcessPaymentReply(ProcessPaymentReply reply);
+
+	SagaDto getSagaById(UUID id);
+}

@@ -1,0 +1,42 @@
+package org.vedantacomp.seat.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.vedantacomp.common.dto.SeatDto;
+import org.vedantacomp.seat.entity.Seat;
+import org.vedantacomp.seat.exception.SeatNotFoundException;
+import org.vedantacomp.seat.mapper.SeatMapper;
+import org.vedantacomp.seat.repository.SeatRepository;
+
+@RestController
+@RequestMapping("/api/v1/seats")
+public class SeatController {
+
+    private final SeatRepository seatRepository;
+    private final SeatMapper seatMapper;
+
+    public SeatController(SeatRepository seatRepository, SeatMapper seatMapper) {
+        this.seatRepository = seatRepository;
+        this.seatMapper = seatMapper;
+    }
+
+    @PostMapping
+    public ResponseEntity<SeatDto> createSeat(@RequestBody SeatDto seatDto) {
+        Seat seat = seatMapper.toEntity(seatDto);
+        Seat savedSeat = seatRepository.save(seat);
+        return new ResponseEntity<>(seatMapper.toDto(savedSeat), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SeatDto> getSeatById(@PathVariable Long id) {
+        Seat seat = seatRepository.findById(id)
+                .orElseThrow(() -> new SeatNotFoundException("Seat not found for id: " + id));
+        return ResponseEntity.ok(seatMapper.toDto(seat));
+    }
+}

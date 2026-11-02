@@ -1,0 +1,9 @@
+
+
+public record BookingCreatedEvent(
+		Long bookingId,
+		Long userId,
+		Long showId,
+		String seatNumber,
+		BigDecimal amount		
+		) {}

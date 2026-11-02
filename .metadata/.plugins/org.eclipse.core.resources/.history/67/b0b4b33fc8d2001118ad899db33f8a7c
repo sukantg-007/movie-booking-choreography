@@ -1,0 +1,31 @@
+package org.vedantacomp.show.dto;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Builder
+public record ShowDto(
+		Long id,
+		Long bookingId,
+		Long showId,
+		String movieName,
+		String theaterName,
+		String seatNumber,
+		LocalDateTime showTime,
+		
+		) {
+
+    private Long id;
+    private
+    private String movieName;
+    private String theaterName;
+    private LocalDateTime showTime;
+    private BigDecimal ticketPrice;
+    private Integer totalSeats;
+    private LocalDateTime createdAt;
+}

@@ -1,0 +1,14 @@
+package org.vedantacomp.saga.mapper;
+
+import org.mapstruct.Mapper;
+import org.vedantacomp.saga.dto.SagaDto;
+import org.vedantacomp.saga.entity.Saga;
+
+@Mapper(componentModel = "spring")
+public interface SagaMapper {
+
+	SagaDto toDto(Saga saga);
+
+	@Mapping(target = "id", ignore = true)
+	Saga toEntity(SagaDto sagaDto);
+}

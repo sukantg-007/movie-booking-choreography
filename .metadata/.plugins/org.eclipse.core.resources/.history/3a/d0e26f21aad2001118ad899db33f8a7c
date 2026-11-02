@@ -1,0 +1,16 @@
+package org.vedantacomp.seat.client;
+
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RequiresArgsConstructor
+@Slf4j
+@Component
+public class SeatSagaOrchestratorListener {
+
+	private final KafkaTemplate<String, Object> kafkaTemplate;
+	
+	// 1. Listen to the seat allocation topic for Saga orchestration commands
+}

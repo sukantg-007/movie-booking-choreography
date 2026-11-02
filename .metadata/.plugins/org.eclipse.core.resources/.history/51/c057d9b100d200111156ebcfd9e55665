@@ -1,0 +1,13 @@
+package org.vedantacomp.booking.dto;
+
+@Builder
+public record BookingCreatedEvent(
+		Long bookingId,
+		Long userId,
+		Long showId,
+		String seatNumber,
+		BigDecimal amount
+		
+		) {
+
+}

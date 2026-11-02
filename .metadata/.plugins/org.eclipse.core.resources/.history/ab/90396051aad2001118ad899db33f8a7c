@@ -1,0 +1,33 @@
+package org.vedantacomp.seat.client;
+
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
+import org.vedantacomp.seat.service.SeatService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RequiresArgsConstructor
+@Slf4j
+@Component
+public class SeatSagaOrchestratorListener {
+
+	private final KafkaTemplate<String, Object> kafkaTemplate;
+	private final SeatService seatService;
+	
+	// 1. Listen to the seat allocation topic for Saga orchestration commands
+	public void handleSeatAllocationCommand(SeatAllocationCommand command) {
+		log.info("Received seat allocation command: {}", command);
+		
+		// 2. Process the command and perform necessary actions
+		// For example, allocate the seat and send a response back to the orchestrator
+		boolean allocationSuccess = allocateSeat(command.getSeatId());
+		
+		if (allocationSuccess) {
+			log.info("Seat allocation successful for seat ID: {}", command.getSeatId());
+			kafkaTemplate.send("seat-allocation-response", new SeatAllocationResponse(command.getSeatId(), true));
+		} else {
+			log.error("Seat allocation failed for seat ID: {}", command.getSeatId());
+			kafkaTemplate.send("seat-allocation-response", new SeatAllocationResponse(command.getSeatId(), false));
+		}
+	}
+}

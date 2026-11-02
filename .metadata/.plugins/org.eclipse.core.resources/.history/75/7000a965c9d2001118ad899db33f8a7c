@@ -1,0 +1,15 @@
+package org.vedantacomp.user.service;
+
+import org.springframework.stereotype.Service;
+import org.vedantacomp.user.dto.UserDto;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+	@Override
+	public UserDto getUserById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

@@ -1,0 +1,19 @@
+package org.vedantacomp.seat.service;
+
+import org.vedantacomp.seat.dto.SeatDto;
+
+public class SagaServiceImpl implements SeatService {
+
+	@Override
+	public SeatDto createSeat(SeatDto seatDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SeatDto getSeatById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

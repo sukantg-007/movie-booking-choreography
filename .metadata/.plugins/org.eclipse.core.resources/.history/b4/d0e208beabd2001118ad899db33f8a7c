@@ -1,0 +1,7 @@
+package org.vedantacomp.seat.dto;
+
+public enum SeatStatus {
+	ALLOCATED,
+	DEALLOCATED,
+	FAILED
+}

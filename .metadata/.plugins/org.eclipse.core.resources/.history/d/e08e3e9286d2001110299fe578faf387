@@ -1,0 +1,14 @@
+package org.vedantacomp.saga.dto;
+
+import java.math.BigDecimal;
+
+public record SeatAllocationReply(
+		Long sagaId,
+		Long bookingId,
+		Long seatId,
+		String seatNumber,
+		SeatStatus status,
+		BigDecimal amount,
+		String failureReason
+		) {
+}

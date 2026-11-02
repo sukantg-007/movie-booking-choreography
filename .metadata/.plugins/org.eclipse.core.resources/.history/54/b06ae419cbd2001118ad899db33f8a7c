@@ -1,0 +1,49 @@
+package org.vedantacomp.seat.client;
+
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
+import org.vedantacomp.seat.dto.SeatAllocationCommand;
+import org.vedantacomp.seat.dto.SeatDto;
+import org.vedantacomp.seat.service.SeatService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@Component
+public class SeatSagaOrchestratorListener {
+
+	private final KafkaTemplate<String, Object> kafkaTemplate;
+	private final SeatService seatService;
+	
+	// 1. Listen to the seat allocation topic for Saga orchestration commands
+	@KafkaListener(topics = "seat-allocation-command-topic", groupId = "seat-service-group")
+	public void handleSeatAllocationCommand(SeatAllocationCommand command) {
+		log.info("Received seat allocation command: {}", command);
+		SeatDto seatDto = SeatDto.builder()
+				.sagaId(command.sagaId())
+				.bookingId(command.bookingId())
+				.showId(command.showId())
+				.seatNumber(command.seatNumber())
+				.amount(command.amount())
+				.status(null) // Assuming the status is set to ALLOCATED upon creation
+				.build();
+		seatService.createSeat(seatDto);
+	}
+	
+	// 2 Listen to the payment failure topic for Saga orchestration commands
+	public void handlePaymentFailureCommand(SeatAllocationCommand command) {
+		log.info("Received payment failure command: {}", command);
+		SeatDto seatDto = SeatDto.builder()
+				.sagaId(command.sagaId())
+				.bookingId(command.bookingId())
+				.showId(command.showId())
+				.seatNumber(command.seatNumber())
+				.amount(command.amount())
+				.status(null) // Assuming the status is set to ALLOCATED upon creation
+				.build();
+		seatService.updateSeat(seatDto);
+	}
+}

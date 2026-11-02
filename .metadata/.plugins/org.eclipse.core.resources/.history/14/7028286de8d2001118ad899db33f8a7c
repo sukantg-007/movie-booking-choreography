@@ -1,0 +1,31 @@
+package org.vedantacomp.payment.client;
+
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Component
+@Slf4j
+public class PaymentSagaOrchestratorPublisher {
+	
+	private final KafkaTemplate<String, Object> kafkaTemplate;
+	
+	public static final String PROCESS_PAYMENT_REPLY = "process-payment-reply-topic";
+	public static final String PROCESS_PAYMENT_FAILED_REPLY = "process-payment-failed-reply-topic";
+	
+	// 1. publish Payment Completed Reply to the Saga Orchestrator
+	public void publishProcessPaymentReply(ProcessPaymentReply reply) {
+		log.info("Publishing payment completed reply: {}", reply);
+		kafkaTemplate.send(PROCESS_PAYMENT_REPLY, reply.bookingId().toString(), reply);
+	}
+	
+	// 2. publish Payment Failed Reply to the Saga Orchestrator
+	public void publishProcessPaymentFailedReply(ProcessPaymentReply reply) {
+		log.info("Publishing payment failed reply: {}", reply);
+		kafkaTemplate.send(PROCESS_PAYMENT_FAILED_REPLY, reply.bookingId().toString(), reply);
+	}
+
+}

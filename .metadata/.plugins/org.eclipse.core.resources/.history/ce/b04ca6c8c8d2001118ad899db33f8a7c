@@ -1,0 +1,27 @@
+package org.vedantacomp.show.exception;
+
+import java.time.LocalDateTime;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+	@ExceptionHandler(ShowNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleShowNotFoundException(
+			ShowNotFoundException e,
+			HttpServletRequest request) {
+		ErrorResponse errorResponse = ErrorResponse.builder()
+				.status(HttpStatus.NOT_FOUND.value())
+				.message(e.getMessage())
+				.timestamp(LocalDateTime.now())
+				.path(request.getRequestURI())
+				.build();
+		
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+	}

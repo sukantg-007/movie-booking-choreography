@@ -1,0 +1,5 @@
+package org.vedantacomp.user.config;
+
+public class UserDataInitializer {
+
+}

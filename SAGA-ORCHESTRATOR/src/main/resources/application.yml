@@ -1,0 +1,59 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: SAGA-ORCHESTRATOR-SERVICE
+  logging:
+     file:
+          # Resolves to: ./logs/booking-service/booking-service.log
+          name: logs/${spring.application.name}/${spring.application.name}.log
+     logback:
+          rollingpolicy:
+            # Pattern for archived daily rolling logs
+            file-name-pattern: logs/${spring.application.name}/archived/${spring.application.name}-%d{yyyy-MM-dd}.%i.log.gz
+            max-file-size: 10MB
+            max-history: 15
+            total-size-cap: 1GB
+     pattern:
+          console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+          file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sagadb
+    username: postgres
+    password: Sukantg#007
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate: format_sql:true
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+    consumer:
+      group-id: saga-orchestrator-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: "*"
+        spring.json.add.type.headers: true
+      producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  eureka:
+     client:
+       register-with-eureka: true
+       fetch-registry: true
+       service-url:
+         defaultZone: http://localhost:8761/eureka/

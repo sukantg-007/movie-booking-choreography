@@ -1,0 +1,16 @@
+package org.vedantacomp.saga.dto;
+
+import java.math.BigDecimal;
+
+import lombok.Builder;
+
+@Builder
+public record BookingCreatedEvent(
+		Long bookingId,
+		Long userId,
+		Long showId,
+		String seatNumber,
+		BigDecimal amount		
+		) {
+
+}

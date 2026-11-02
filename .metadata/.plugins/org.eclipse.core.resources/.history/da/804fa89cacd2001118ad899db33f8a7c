@@ -1,0 +1,12 @@
+package org.vedantacomp.seat.service;
+
+import org.vedantacomp.seat.dto.SeatDto;
+
+public interface SeatService {
+
+    void createSeat(SeatDto seatDto);
+
+    SeatDto getSeatById(Long id);
+    
+    List<SeatDto> getAllSeats();
+}

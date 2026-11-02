@@ -1,0 +1,42 @@
+package org.vedantacomp.booking.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.vedantacomp.booking.dto.BookingDto;
+import org.vedantacomp.booking.entity.Booking;
+import org.vedantacomp.booking.exception.BookingNotFoundException;
+import org.vedantacomp.booking.mapper.BookingMapper;
+import org.vedantacomp.booking.repository.BookingRepository;
+
+@RestController
+@RequestMapping("/api/bookings")
+public class BookingController {
+
+    private final BookingRepository bookingRepository;
+    private final BookingMapper bookingMapper;
+
+    public BookingController(BookingRepository bookingRepository, BookingMapper bookingMapper) {
+        this.bookingRepository = bookingRepository;
+        this.bookingMapper = bookingMapper;
+    }
+
+    @PostMapping
+    public ResponseEntity<BookingDto> createBooking(@RequestBody BookingDto bookingDto) {
+        Booking booking = bookingMapper.toEntity(bookingDto);
+        Booking savedBooking = bookingRepository.save(booking);
+        return new ResponseEntity<>(bookingMapper.toDto(savedBooking), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookingDto> getBookingById(@PathVariable Long id) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found for id: " + id));
+        return ResponseEntity.ok(bookingMapper.toDto(booking));
+    }
+}

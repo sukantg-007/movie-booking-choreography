@@ -1,0 +1,67 @@
+package org.vedantacomp.payment.service;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.vedantacomp.payment.dto.PaymentDto;
+import org.vedantacomp.payment.dto.PaymentResult;
+import org.vedantacomp.payment.dto.PaymentStatus;
+import org.vedantacomp.payment.entity.Payment;
+import org.vedantacomp.payment.mapper.PaymentMapper;
+import org.vedantacomp.payment.repository.PaymentRepository;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@Service
+public class PaymentServiceImpl implements PaymentService {
+
+	private final PaymentRepository paymentRepository;
+	private final PaymentMapper paymentMapper;
+
+	public static final String MAX_TRANSACTION_LIMIT = "10000"; // Example limit for demonstration	
+	@Override
+	@Transactional
+	public void createPayment(PaymentDto paymentDto) {
+		log.info("Creating payment for bookingId: {}", paymentDto.getBookingId());
+		// 1. CREATE a new payment record in the database
+		Payment payment = paymentMapper.toEntity(paymentDto);
+		String transactionId = "TXN-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+		payment.setTransactionId(transactionId);
+		payment.setStatus(PaymentStatus.COMPLETED); // Assuming payment is completed for simplicity
+		paymentRepository.save(payment);
+
+		// 2. 
+
+	}
+
+	@Override
+	public PaymentDto getPaymentById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<PaymentDto> getAllPayments() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private PaymentResult executePaymentWithGateway(PaymentDto dto) {
+		try {
+			// Replace with actual 3rd-party client call (e.g., razorpayClient.payments.capture(...))
+			if (dto.getAmount() == null || dto.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+				return PaymentResult.failure("Invalid payment amount");
+			}
+			// Example simulation check:
+			return PaymentResult.success();
+		} catch (PaymentGatewayException ex) {
+			return PaymentResult.failure(ex.getMessage());
+		}
+	}
+
+}

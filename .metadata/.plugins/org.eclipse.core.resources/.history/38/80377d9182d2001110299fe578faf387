@@ -1,0 +1,110 @@
+package org.vedantacomp.saga.service;
+
+
+import org.springframework.stereotype.Service;
+import org.vedantacomp.saga.client.SagaOrchestratorCommandPublisher;
+import org.vedantacomp.saga.dto.BookingCreatedEvent;
+import org.vedantacomp.saga.dto.ProcessPaymentCommand;
+import org.vedantacomp.saga.dto.SagaDto;
+import org.vedantacomp.saga.dto.SagaOrchestratorStatus;
+import org.vedantacomp.saga.dto.SeatAllocationCommand;
+import org.vedantacomp.saga.dto.SeatAllocationReply;
+import org.vedantacomp.saga.dto.SeatStatus;
+import org.vedantacomp.saga.entity.Saga;
+import org.vedantacomp.saga.exception.SagaNotFoundException;
+import org.vedantacomp.saga.repository.SagaRepository;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@Service
+public class SagaOrchestratorServiceImpl implements SagaOrchestratorService {
+	
+	private final SagaRepository sagaRepository;
+	private final SagaOrchestratorCommandPublisher commandPublisher;
+	@Override
+	public SagaDto createSaga(SagaDto sagaDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public SagaDto getSagaById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public void handleBookingCreatedEvent(BookingCreatedEvent event) {
+		log.info("Handling booking created event: {}", event);
+		//1. GET BOOKINGID, USERID, SHOWID, SEATNUMBER, AMOUNT FROM THE BOOKING CREATED EVENT
+		//2. CREATE A SAGA RECORD IN THE SAGA TABLE WITH STATUS AS "BOOKING_CREATED"
+		Saga saga = new Saga();
+		saga.setBookingId(event.bookingId());
+		saga.setUserId(event.userId());
+		saga.setShowId(event.showId());
+		saga.setSeatNumber(event.seatNumber());
+		saga.setAmount(event.amount());
+		saga.setStatus(SagaOrchestratorStatus.BOOKING_CREATED);
+		sagaRepository.save(saga);
+		
+		log.info("Saga record created with booking id: {} with status: {}", saga.getBookingId(), saga.getStatus());		
+		
+		//3. PUBLISH SEAT ALLOCATION COMMAND TO THE SEAT ALLOCATION SERVICE
+		commandPublisher.publishSeatAllocationCommand(
+				SeatAllocationCommand.builder()
+				.sagaId(saga.getId())
+				.bookingId(saga.getBookingId())
+				.showId(saga.getShowId())
+				.seatNumber(saga.getSeatNumber())
+				.amount(saga.getAmount())
+				.build()
+				);
+	}
+	
+	@Override
+	@Transactional
+	public void handleSeatAllocationReply(SeatAllocationReply reply) {
+		log.info("Handling seat allocation reply: {}", reply);
+		//1. GET SAGA RECORD FROM THE SAGA TABLE USING SAGAID
+		Saga saga = sagaRepository.findById(reply.sagaId())
+				.orElseThrow(() -> new SagaNotFoundException("Saga not found with id: " + reply.sagaId()));
+		
+		//2. UPDATE THE SAGA RECORD STATUS BASED ON THE REPLY STATUS
+		if(reply.status() == SeatStatus.ALLOCATED) {
+			saga.setStatus(SagaOrchestratorStatus.SEAT_ALLOCATED);
+			saga.setFailureReason(null);
+			saga.setSeatNumber(reply.seatNumber());
+			sagaRepository.save(saga);
+			log.info("Saga record updated with booking id: {} with status: {}", saga.getBookingId(), saga.getStatus());
+			//3. PUBLISH PAYMENT COMMAND TO THE PAYMENT SERVICE
+			commandPublisher.publishProcessPaymentCommand(
+					ProcessPaymentCommand.builder()
+					.sagaId(saga.getId())
+					.bookingId(saga.getBookingId())
+					.seatNumber(saga.getSeatNumber())
+					.seatNumber(reply.seatNumber())
+					.amount(saga.getAmount())
+					.build()
+					);
+			
+		}else {
+			saga.setStatus(SagaOrchestratorStatus.SEAT_ALLOCATION_FAILED);
+			saga.setFailureReason(reply.failureReason());
+			saga.setSeatNumber(reply.seatNumber());
+			log.info("Saga record updated with booking id: {} with status: {} and failure reason: {}", saga.getBookingId(), saga.getStatus(), saga.getFailureReason());
+			//4. PUBLISH SAGA COMPENSATION COMMAND TO THE BOOKING SERVICE
+			commandPublisher.publishSagaCompensationCommand(
+					SagaCompensationCommand.builder()
+					.sagaId(saga.getId())
+					.bookingId(saga.getBookingId())
+					.build()
+					);
+			
+		}
+
+}

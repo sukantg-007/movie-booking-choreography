@@ -1,0 +1,13 @@
+package org.vedantacomp.saga.service;
+
+import org.vedantacomp.saga.dto.BookingCreatedEvent;
+import org.vedantacomp.saga.dto.SagaDto;
+
+public interface SagaOrchestratorService {
+
+    SagaDto createSaga(SagaDto sagaDto);
+
+    SagaDto getSagaById(Long id);
+
+	void handleBookingCreatedEvent(BookingCreatedEvent event);
+}

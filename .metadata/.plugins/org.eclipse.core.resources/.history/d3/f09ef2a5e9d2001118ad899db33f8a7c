@@ -1,0 +1,17 @@
+package org.vedantacomp.seat.mapper;
+
+import java.util.List;
+
+import org.mapstruct.Mapper;
+import org.vedantacomp.seat.dto.SeatDto;
+import org.vedantacomp.seat.entity.Seat;
+
+@Mapper(componentModel = "spring")
+public interface SeatMapper {
+
+    SeatDto toDto(Seat seat);
+
+    Seat toEntity(SeatDto seatDto);
+    
+    List<SeatDto> toDto(List<Seat> seats);
+}

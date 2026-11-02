@@ -1,0 +1,14 @@
+package org.vedantacomp.payment.service;
+
+import org.vedantacomp.payment.dto.PaymentDto;
+
+public interface PaymentService {
+
+    void createPayment(PaymentDto paymentDto);
+
+    void updatePaymentStatus(Long paymentId, String status);
+    
+    PaymentDto getPaymentById(Long id);
+    
+    List<PaymentDto> getAllPayments();
+}

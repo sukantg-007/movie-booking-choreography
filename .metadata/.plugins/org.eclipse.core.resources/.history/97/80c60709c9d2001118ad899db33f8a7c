@@ -1,0 +1,10 @@
+package org.vedantacomp.show.service;
+
+import org.vedantacomp.show.dto.ShowDto;
+
+public interface ShowService {
+
+    ShowDto createShow(ShowDto showDto);
+
+    ShowDto getShowById(Long id);
+}

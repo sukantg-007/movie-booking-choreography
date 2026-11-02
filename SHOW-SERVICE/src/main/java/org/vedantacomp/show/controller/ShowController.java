@@ -1,0 +1,42 @@
+package org.vedantacomp.show.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.vedantacomp.common.dto.ShowDto;
+import org.vedantacomp.show.entity.Show;
+import org.vedantacomp.show.exception.ShowNotFoundException;
+import org.vedantacomp.show.mapper.ShowMapper;
+import org.vedantacomp.show.repository.ShowRepository;
+
+@RestController
+@RequestMapping("/api/v1/shows")
+public class ShowController {
+
+    private final ShowRepository showRepository;
+    private final ShowMapper showMapper;
+
+    public ShowController(ShowRepository showRepository, ShowMapper showMapper) {
+        this.showRepository = showRepository;
+        this.showMapper = showMapper;
+    }
+
+    @PostMapping
+    public ResponseEntity<ShowDto> createShow(@RequestBody ShowDto showDto) {
+        Show show = showMapper.toEntity(showDto);
+        Show savedShow = showRepository.save(show);
+        return new ResponseEntity<>(showMapper.toDto(savedShow), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ShowDto> getShowById(@PathVariable Long id) {
+        Show show = showRepository.findById(id)
+                .orElseThrow(() -> new ShowNotFoundException("Show not found for id: " + id));
+        return ResponseEntity.ok(showMapper.toDto(show));
+    }
+}

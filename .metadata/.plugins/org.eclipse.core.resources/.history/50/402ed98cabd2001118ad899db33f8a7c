@@ -1,0 +1,23 @@
+package org.vedantacomp.seat.dto;
+
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Builder
+public record SeatDto (
+		
+		
+		)
+
+    private Long id;
+    private Long bookingId;
+    private Long showId;
+    private String seatNumber;
+    private SeatStatu status;
+    private LocalDateTime createdAt;
+}

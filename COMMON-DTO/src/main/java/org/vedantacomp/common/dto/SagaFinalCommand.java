@@ -1,0 +1,17 @@
+package org.vedantacomp.common.dto;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+public record SagaFinalCommand(
+		Long bookingId,
+		Long userId,
+		Long showId,
+		String seatNumber,
+		BookingStatus status,
+		BigDecimal amount,
+		LocalDateTime updatedAt
+		
+		) {
+
+}

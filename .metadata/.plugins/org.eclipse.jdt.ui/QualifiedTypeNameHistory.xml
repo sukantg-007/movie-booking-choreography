@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="org.vedantacomp.booking.exception.BookingNotFoundException"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.booking.service.BookingService"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.seat.service.SeatService"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.seat.repository.SeatRepository"/>
+    <fullyQualifiedTypeName name="java.util.Optional"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.seat.dto.SeatStatus"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.seat.client.KafkaPublisherService"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Component"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.payment.service.PaymentService"/>
+    <fullyQualifiedTypeName name="jakarta.transaction.Transactional"/>
+    <fullyQualifiedTypeName name="java.math.BigDecimal"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.payment.dto.ProcessPaymentReply"/>
+    <fullyQualifiedTypeName name="java.util.UUID"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.payment.dto.PaymentStatus"/>
+    <fullyQualifiedTypeName name="org.springframework.http.HttpStatus"/>
+    <fullyQualifiedTypeName name="lombok.extern.slf4j.Slf4j"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.booking.entity.BookingStatus"/>
+    <fullyQualifiedTypeName name="org.springframework.web.service.annotation.HttpExchange"/>
+    <fullyQualifiedTypeName name="org.springframework.web.service.annotation.GetExchange"/>
+    <fullyQualifiedTypeName name="java.util.Map"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.booking.client.UserServiceClient"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.booking.client.ShowServiceClient"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.booking.dto.UserDto"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.booking.dto.ShowDto"/>
+    <fullyQualifiedTypeName name="lombok.Builder"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.EnumType"/>
+    <fullyQualifiedTypeName name="org.springframework.context.annotation.Configuration"/>
+    <fullyQualifiedTypeName name="org.vedantacomp.common.dto.SagaStatus"/>
+</qualifiedTypeNameHistroy>

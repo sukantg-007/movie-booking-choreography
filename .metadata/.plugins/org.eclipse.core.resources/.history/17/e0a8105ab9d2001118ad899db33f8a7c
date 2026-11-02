@@ -1,0 +1,23 @@
+package org.vedantacomp.payment.client;
+
+import org.springframework.stereotype.Component;
+import org.vedantacomp.payment.dto.ProcessPaymentCommand;
+import org.vedantacomp.payment.service.PaymentService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@Component
+public class PaymentKafkaListener {
+
+	private final PaymentService paymentService;
+	
+	// 1. Listen to the process payment command topic for Saga orchestration commands
+	
+	public void handleProcessPaymentCommand(ProcessPaymentCommand command) {
+		log.info("Received process payment command: {}", command);
+		paymentService.processPayment(command);
+	}
+}

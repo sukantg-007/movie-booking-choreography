@@ -1,0 +1,22 @@
+package org.vedantacomp.payment.client;
+
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Component
+@Slf4j
+public class PaymentSagaOrchestratorPublisher {
+	
+	private final KafkaTemplate<String, Object> kafkaTemplate;
+	
+	// 1. publish Payment Completed Reply to the Saga Orchestrator
+	public void publishPaymentCompletedReply(PaymentCompletedReply reply) {
+		log.info("Publishing payment completed reply: {}", reply);
+		kafkaTemplate.send(PaymentCompletedReply.PAYMENT_COMPLETED_REPLY_TOPIC, reply.bookingId().toString(), reply);
+	}
+
+}

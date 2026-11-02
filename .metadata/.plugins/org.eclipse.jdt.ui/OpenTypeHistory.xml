@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<typeInfoHistroy>
+    <typeInfo handle="=BOOKING-SERVICE/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;org.vedantacomp.booking.service{BookingService.java[BookingService" modifiers="513" timestamp="1793206644394"/>
+    <typeInfo handle="=SEAT-ALLOCATION-SERVICE/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;org.vedantacomp.seat.service{SeatService.java[SeatService" modifiers="513" timestamp="1793203662373"/>
+    <typeInfo handle="=SEAT-ALLOCATION-SERVICE/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;org.vedantacomp.seat.mapper{SeatMapper.java[SeatMapper" modifiers="513" timestamp="1793203637859"/>
+    <typeInfo handle="=PAYMENT-SERVICE/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;org.vedantacomp.payment.service{PaymentService.java[PaymentService" modifiers="513" timestamp="1793203087630"/>
+    <typeInfo handle="=PAYMENT-SERVICE/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;org.vedantacomp.payment.mapper{PaymentMapper.java[PaymentMapper" modifiers="513" timestamp="1793202812351"/>
+    <typeInfo handle="=SHOW-SERVICE/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;org.vedantacomp.show.service{ShowService.java[ShowService" modifiers="513" timestamp="1793203702694"/>
+    <typeInfo handle="=SHOW-SERVICE/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;org.vedantacomp.show.mapper{ShowMapper.java[ShowMapper" modifiers="513" timestamp="1793203694420"/>
+    <typeInfo handle="=USER-SERVICE/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;org.vedantacomp.user.service{UserService.java[UserService" modifiers="513" timestamp="1793203742406"/>
+</typeInfoHistroy>

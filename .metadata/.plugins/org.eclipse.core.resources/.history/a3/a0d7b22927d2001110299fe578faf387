@@ -1,0 +1,10 @@
+package org.vedantacomp.saga.dto;
+
+public enum SagaOrchestratorStatus {
+	PENDING,
+	SEAT_ALLOCATED,
+	PAYMENT_COMPLETED,
+	SEAT_DEALLOCATED,
+	SAGA_COMPLETED,
+	SAGA_FAILED
+}

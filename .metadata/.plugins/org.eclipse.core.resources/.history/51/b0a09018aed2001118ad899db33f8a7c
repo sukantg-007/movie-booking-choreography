@@ -1,0 +1,55 @@
+package org.vedantacomp.seat.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.vedantacomp.seat.dto.SeatDto;
+import org.vedantacomp.seat.dto.SeatStatus;
+import org.vedantacomp.seat.mapper.SeatMapper;
+import org.vedantacomp.seat.repository.SeatRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@Service
+public class SagaServiceImpl implements SeatService {
+	
+	private final SeatRepository seatRepository;
+	private final SeatMapper seatMapper;
+
+	@Override
+	public void createSeat(SeatDto seatDto) {
+		// 1. CHECK AVAILABILITY OF SEAT WITH SEAT NUMBER AND SHOW ID AND AVAILABLE
+		var seat =seatRepository.findBySeatNumberAndShowIdAndStatus(seatDto.seatNumber(), seatDto.showId(), SeatStatus.AVAILABLE);
+		if(seat.isPresent()) {
+			// 2. Map SeatDto to Seat entity and save it to the database
+			var seatEntity = seatMapper.toEntity(seatDto);
+			seatEntity.setStatus(SeatStatus.ALLOCATED);
+			seatRepository.save(seatEntity);
+			
+			// 3. PUBLISH SEAT ALLOCATION REPLY TO SAGA ORCHESTRATOR 
+			log.info("Seat allocated successfully: {}", seatEntity);
+		} else {
+			log.error("Seat not available for allocation: {}", seatDto);
+			throw new RuntimeException("Seat not available for allocation");
+		}
+		// 2. Map SeatDto to Seat entity and save it to the database
+		
+		// 3. PUBLISH SEAT ALLOCATION REPLY TO SAGA ORCHESTRATOR 
+	}
+
+	@Override
+	public SeatDto getSeatById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SeatDto> getAllSeats() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

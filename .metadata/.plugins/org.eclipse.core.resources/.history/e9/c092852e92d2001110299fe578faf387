@@ -1,0 +1,59 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        # Route 1: Booking Service
+        - id: booking-service-route
+          uri: ${BOOKING_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/v1/bookings/**
+
+        # Route 2: Seat Allocation Service
+        - id: seat-allocaton-service-route
+          uri: ${SEAT_ALLOCATION_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/v1/seats/**
+
+        # Route 3: Payment Service (if external direct access is needed)
+        - id: payment-service-route
+          uri: ${PAYMENT_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/api/v1/payments/**
+
+        # Route 4: Show Service
+        - id: show-service-route
+          uri: ${SHOW_SERVICE_URL:http://localhost:8086}
+          predicates:
+            - Path=/api/v1/shows/**
+
+      # Global CORS Configuration for Web Frontends (Angular, React)
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4200"
+              - "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+# Monitoring Gateway Status
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    gateway:
+      enabled: true

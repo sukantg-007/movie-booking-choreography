@@ -1,0 +1,5 @@
+package org.vedantacomp.payment.dto;
+
+public record PaymentResult() {
+
+}

@@ -1,0 +1,12 @@
+package org.vedantacomp.booking.service;
+
+import org.vedantacomp.booking.dto.BookingDto;
+
+public interface BookingService {
+
+    BookingDto createBooking(BookingDto bookingDto);
+
+    BookingDto getBookingById(Long id);
+    
+    void updateBookingStatus(Long bookingId, String status);
+}

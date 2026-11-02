@@ -1,0 +1,8 @@
+package org.vedantacomp.saga.dto;
+
+import lombok.Builder;
+
+@Builder
+public record SeatAllocationCommand() {
+
+}

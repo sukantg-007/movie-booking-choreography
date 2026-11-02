@@ -1,0 +1,13 @@
+package org.vedantacomp.show.exception;
+
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+	@ExceptionHandler(ShowNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleShowNotFoundException(
+			ShowNotFoundException e,
+			HttpServletRequest request) {
+		Error
+	}

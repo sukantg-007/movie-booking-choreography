@@ -1,0 +1,6 @@
+package org.vedantacomp.saga.mapper;
+
+@Mapper(componentModel = "spring")
+public interface SagaMapper {
+
+}

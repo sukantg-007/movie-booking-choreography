@@ -1,0 +1,5 @@
+package org.vedantacomp.show.exception;
+
+public class GlobalExceptionHandler {
+
+}

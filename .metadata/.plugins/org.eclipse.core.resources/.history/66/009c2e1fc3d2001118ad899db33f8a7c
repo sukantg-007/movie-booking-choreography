@@ -1,0 +1,9 @@
+package org.vedantacomp.payment.dto;
+
+@builder
+public record PaymentResult(
+		boolean success,
+		String message
+		) {
+
+}

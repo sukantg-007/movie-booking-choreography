@@ -1,0 +1,8 @@
+package org.vedantacomp.saga.dto;
+
+public enum SeatStatus {
+	PENDING,
+	ALLOCATED,
+	DEALLOCATED,
+	FAILED
+}

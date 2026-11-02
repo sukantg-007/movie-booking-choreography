@@ -1,0 +1,42 @@
+package org.vedantacomp.saga.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.vedantacomp.saga.dto.SagaDto;
+import org.vedantacomp.saga.entity.Saga;
+import org.vedantacomp.saga.exception.SagaNotFoundException;
+import org.vedantacomp.saga.mapper.SagaMapper;
+import org.vedantacomp.saga.repository.SagaRepository;
+
+@RestController
+@RequestMapping("/api/sagas")
+public class SagaController {
+
+    private final SagaRepository sagaRepository;
+    private final SagaMapper sagaMapper;
+
+    public SagaController(SagaRepository sagaRepository, SagaMapper sagaMapper) {
+        this.sagaRepository = sagaRepository;
+        this.sagaMapper = sagaMapper;
+    }
+
+    @PostMapping
+    public ResponseEntity<SagaDto> createSaga(@RequestBody SagaDto sagaDto) {
+        Saga saga = sagaMapper.toEntity(sagaDto);
+        Saga savedSaga = sagaRepository.save(saga);
+        return new ResponseEntity<>(sagaMapper.toDto(savedSaga), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SagaDto> getSagaById(@PathVariable Long id) {
+        Saga saga = sagaRepository.findById(id)
+                .orElseThrow(() -> new SagaNotFoundException("Saga not found for id: " + id));
+        return ResponseEntity.ok(sagaMapper.toDto(saga));
+    }
+}

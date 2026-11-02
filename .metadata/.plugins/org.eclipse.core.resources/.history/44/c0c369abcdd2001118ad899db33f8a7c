@@ -1,0 +1,6 @@
+package org.vedantacomp.booking.client;
+
+@HttpExchange("/api/v1/users")
+public interface UserServiceClient {
+
+}

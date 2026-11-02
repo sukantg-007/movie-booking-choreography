@@ -1,0 +1,7 @@
+package org.vedantacomp.seat.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.vedantacomp.seat.entity.Seat;
+
+public interface SeatRepository extends JpaRepository<Seat, Long> {
+}

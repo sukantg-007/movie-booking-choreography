@@ -1,0 +1,13 @@
+package org.vedantacomp.booking.dto;
+
+public record BookingResponseDTO(
+		    String bookingId,
+		    UserDto user,
+		    ShowDto show,
+		    String selectedSeats,
+		    BigDecimal totalAmount,
+		    BookingStatus bookingStatus,
+		    LocalDateTime bookedAt
+		) {
+
+}

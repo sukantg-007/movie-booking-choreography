@@ -1,0 +1,89 @@
+package org.vedantacomp.booking.service;
+
+import org.springframework.stereotype.Service;
+import org.vedantacomp.booking.client.KafkaPublisherService;
+import org.vedantacomp.booking.client.ShowServiceClient;
+import org.vedantacomp.booking.client.UserServiceClient;
+import org.vedantacomp.booking.dto.BookingDto;
+import org.vedantacomp.booking.entity.Booking;
+import org.vedantacomp.booking.exception.BookingNotFoundException;
+import org.vedantacomp.booking.mapper.BookingMapper;
+import org.vedantacomp.booking.repository.BookingRepository;
+import org.vedantacomp.common.dto.BookingCreatedEvent;
+import org.vedantacomp.common.dto.BookingResponseDTO;
+import org.vedantacomp.common.dto.BookingStatus;
+import org.vedantacomp.common.dto.SagaFinalCommand;
+import org.vedantacomp.common.dto.ShowDto;
+import org.vedantacomp.common.dto.UserDto;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@Service
+public class BookingServiceImpl implements BookingService {
+	private final BookingRepository bookingRepository;
+    private final BookingMapper bookingMapper;
+    private final KafkaPublisherService kafkaPublisherService;
+    private final UserServiceClient userServiceClient;
+    private final ShowServiceClient showServiceClient;
+    
+    
+	@Override
+	public BookingDto createBooking(BookingDto bookingDto) {
+		// 1. Convert BookingDto to Booking entity
+		Booking booking = bookingMapper.toEntity(bookingDto);
+		//2. Save the Booking entity to the database
+		booking.setStatus(BookingStatus.PENDING);
+		Booking savedBooking = bookingRepository.save(booking);
+		//3. Convert the saved Booking entity back to BookingDto
+		BookingDto savedBookingDto = bookingMapper.toDto(savedBooking);
+		//4. Publish the booking event to Kafka
+		kafkaPublisherService.publishBookingCreatedEvent(
+				BookingCreatedEvent.builder()
+				.bookingId(savedBooking.getId())
+				.userId(savedBooking.getUserId())
+				.seatNumber(savedBooking.getSeatNumber())
+				.amount(savedBooking.getAmount())
+				.showId(savedBooking.getShowId())
+				.build()
+	        );
+		log.info("Booking created and event published to Kafka for bookingId: {}", savedBooking.getId());
+		//5. Return the saved BookingDto
+		return savedBookingDto;
+	}
+
+	@Override
+	public BookingResponseDTO getBookingById(Long id) {
+		Booking booking = bookingRepository.findById(id)
+				.orElseThrow(() -> new BookingNotFoundException("Booking not found for id: " + id));
+		UserDto userById = userServiceClient.getUserById(booking.getUserId());
+		ShowDto showById = showServiceClient.getShowById(booking.getShowId());
+		BookingDto dto = bookingMapper.toDto(booking);
+		BookingResponseDTO bookingResponseDto = BookingResponseDTO.builder()
+				.bookingId(dto.getId())
+				.seatNumber(dto.getSeatNumber())
+				.amount(dto.getAmount())
+				.status(dto.getStatus())
+				.bookedAt(dto.getCreatedAt())
+				.user(userById)
+				.show(showById)
+				.build();
+		return bookingResponseDto;
+	}
+
+	@Override
+	public void updateBookingStatus(SagaFinalCommand command) {
+		log.info("Updating booking status for bookingId: {}, status: {}", command.bookingId(), command.status());
+		// 1. Retrieve the booking entity from the database using the bookingId
+		Booking booking = bookingRepository.findById(command.bookingId())
+				.orElseThrow(() -> new RuntimeException("Booking not found for id: " + command.bookingId()));
+		// 2. Update the status of the booking entity
+		booking.setStatus(command.status());		
+		// 3. Save the updated booking entity back to the database
+		bookingRepository.save(booking);
+		log.info("Booking status updated successfully for bookingId: {}, new status: {}", command.bookingId(), command.status());
+	}
+
+}

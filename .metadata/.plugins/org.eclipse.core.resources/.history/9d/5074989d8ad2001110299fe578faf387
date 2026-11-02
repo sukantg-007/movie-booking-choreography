@@ -1,0 +1,12 @@
+package org.vedantacomp.saga.dto;
+
+import java.math.BigDecimal;
+
+public record ProcessPaymentReply(
+		Long sagaId,
+		Long bookingId,
+		Long paymentId,
+		PaymentStatus status,
+		String failureReason,
+		BigDecimal amount
+		) {}

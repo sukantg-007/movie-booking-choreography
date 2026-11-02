@@ -1,0 +1,73 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: API-GATEWAY
+  logging:
+    file:
+      name: logs/${spring.application.name}/${spring.application.name}.log
+    logback:
+      rollingpolicy:
+        file-name-pattern: logs/${spring.application.name}/archived/${spring.application.name}-%d{yyyy-MM-dd}.%i.log.gz
+        max-file-size: 10MB
+        max-history: 15
+        total-size-cap: 1GB
+    pattern:
+      console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
+      file: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
+  cloud:
+    gateway:
+      routes:
+        - id: booking-service-route
+          uri: ${BOOKING_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/v1/bookings/**
+        - id: seat-allocaton-service-route
+          uri: ${SEAT_ALLOCATION_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/v1/seats/**
+        - id: payment-service-route
+          uri: ${PAYMENT_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/api/v1/payments/**
+        - id: saga-orchestrator-route
+          uri: ${SAGA_ORCHESTRATOR_SERVICE_URL:http://localhost:8085}
+          predicates:
+            - Path=/api/v1/sagas/**
+        - id: show-service-route
+          uri: ${SHOW_SERVICE_URL:http://localhost:8086}
+          predicates:
+            - Path=/api/v1/shows/**
+        - id: user-service-route
+          uri: ${USER_SERVICE_URL:http://localhost:8087}
+          predicates:
+            - Path=/api/v1/users/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - http://localhost:4200
+              - http://localhost:3000
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - '*'
+            allowCredentials: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    gateway:
+      enabled: true
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

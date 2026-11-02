@@ -1,0 +1,18 @@
+package org.vedantacomp.saga.dto;
+
+import java.math.BigDecimal;
+
+import lombok.Builder;
+
+@Builder
+public record SagaCompensationCommand(
+		Long sagaId,
+		Long bookingId,
+		Long showId,
+		String failureReason,
+		String seatNumber,
+		BigDecimal amount,
+		SagaStatus status		
+		) {
+
+}

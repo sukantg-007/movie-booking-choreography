@@ -1,0 +1,19 @@
+package org.vedantacomp.common.dto;
+
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Builder
+public record ShowDto(
+		Long id,
+		Long showId,
+		String movieName,
+		String theaterName,
+		String seatNumber,
+		LocalDateTime showTime
+		) {
+}

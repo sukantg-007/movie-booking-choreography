@@ -1,0 +1,18 @@
+package org.vedantacomp.booking.dto;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import org.vedantacomp.booking.entity.BookingStatus;
+
+public record BookingResponseDTO(
+		    String bookingId,
+		    UserDto user,
+		    ShowDto show,
+		    String selectedSeats,
+		    BigDecimal totalAmount,
+		    BookingStatus bookingStatus,
+		    LocalDateTime bookedAt
+		) {
+
+}

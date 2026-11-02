@@ -1,0 +1,120 @@
+package org.vedantacomp.seat.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.vedantacomp.seat.client.KafkaPublisherService;
+import org.vedantacomp.seat.dto.SeatAllocationReply;
+import org.vedantacomp.seat.dto.SeatDto;
+import org.vedantacomp.seat.dto.SeatStatus;
+import org.vedantacomp.seat.mapper.SeatMapper;
+import org.vedantacomp.seat.repository.SeatRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@Service
+public class SagaServiceImpl implements SeatService {
+	
+	private final SeatRepository seatRepository;
+	private final SeatMapper seatMapper;
+	private final KafkaPublisherService kafkaPublisherService;
+
+	@Override
+	public void createSeat(SeatDto seatDto) {
+		// 1. CHECK AVAILABILITY OF SEAT WITH SEAT NUMBER AND SHOW ID AND AVAILABLE
+		var seat =seatRepository.findBySeatNumberAndShowIdAndStatus(seatDto.seatNumber(), seatDto.showId(), SeatStatus.AVAILABLE);
+		if(seat.isPresent()) {
+			log.info("Seat is available for allocation: {}", seatDto);
+			// 2. Map SeatDto to Seat entity and save it to the database
+			var seatEntity = seatMapper.toEntity(seatDto);
+			seatEntity.setStatus(SeatStatus.ALLOCATED);
+			seatRepository.save(seatEntity);
+			log.info("Seat allocated successfully: {}", seatEntity);
+			// 3. PUBLISH SEAT ALLOCATION REPLY TO SAGA ORCHESTRATOR
+			kafkaPublisherService.publishSeatAllocationReply(
+					SeatAllocationReply.builder()
+							.sagaId(seatDto.sagaId())
+							.bookingId(seatDto.bookingId())
+							.seatId(seatEntity.getId())
+							.showId(seatEntity.getShowId())
+							.seatNumber(seatEntity.getSeatNumber())
+							.status(seatEntity.getStatus())
+							.amount(seatDto.amount())
+							.failureReason(null)
+							.build()
+					);
+			log.info("Seat allocated successfully: {}", seatEntity);
+		} else {
+			log.warn("Seat is not available for allocation: {}", seatDto);
+			kafkaPublisherService.publishSeatAllocationReply(
+					SeatAllocationReply.builder()
+							.sagaId(seatDto.sagaId())
+							.bookingId(seatDto.bookingId())
+							.seatId(null)
+							.showId(seatDto.showId())
+							.seatNumber(seatDto.seatNumber())
+							.status(SeatStatus.FAILED)
+							.amount(seatDto.amount())
+							.failureReason("Seat not available for allocation")
+							.build()
+					);
+			}
+	}
+
+	@Override
+	public SeatDto getSeatById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SeatDto> getAllSeats() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public void updateSeat(SeatDto seatDto) {
+		// 1. CHECK AVAILABILITY OF SEAT WITH SEAT NUMBER AND SHOW ID AND AVAILABLE
+		var seat =seatRepository.findBySeatNumberAndShowId(seatDto.seatNumber(), seatDto.showId());
+		if(seat.isPresent()) {
+			log.info("Seat is available for allocation: {}", seatDto);
+			// 2. Map SeatDto to Seat entity and save it to the database
+			var seatEntity = seatMapper.toEntity(seatDto);
+			seatEntity.setStatus(SeatStatus.ALLOCATED);
+			seatRepository.save(seatEntity);
+			log.info("Seat allocated successfully: {}", seatEntity);
+			// 3. PUBLISH SEAT ALLOCATION REPLY TO SAGA ORCHESTRATOR
+			kafkaPublisherService.publishSeatAllocationReply(
+					SeatAllocationReply.builder()
+							.sagaId(seatDto.sagaId())
+							.bookingId(seatDto.bookingId())
+							.seatId(seatEntity.getId())
+							.showId(seatEntity.getShowId())
+							.seatNumber(seatEntity.getSeatNumber())
+							.status(seatEntity.getStatus())
+							.amount(seatDto.amount())
+							.failureReason(null)
+							.build()
+					);
+			log.info("Seat allocated successfully: {}", seatEntity);
+		} else {
+			log.warn("Seat is not available for allocation: {}", seatDto);
+			kafkaPublisherService.publishSeatAllocationReply(
+					SeatAllocationReply.builder()
+							.sagaId(seatDto.sagaId())
+							.bookingId(seatDto.bookingId())
+							.seatId(null)
+							.showId(seatDto.showId())
+							.seatNumber(seatDto.seatNumber())
+							.status(SeatStatus.FAILED)
+							.amount(seatDto.amount())
+							.failureReason("Seat not available for allocation")
+							.build()
+					);
+			}
+	}
+
+}

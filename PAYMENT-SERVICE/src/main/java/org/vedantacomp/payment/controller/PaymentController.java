@@ -1,0 +1,42 @@
+package org.vedantacomp.payment.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.vedantacomp.common.dto.PaymentDto;
+import org.vedantacomp.payment.entity.Payment;
+import org.vedantacomp.payment.exception.PaymentNotFoundException;
+import org.vedantacomp.payment.mapper.PaymentMapper;
+import org.vedantacomp.payment.repository.PaymentRepository;
+
+@RestController
+@RequestMapping("/api/payments")
+public class PaymentController {
+
+    private final PaymentRepository paymentRepository;
+    private final PaymentMapper paymentMapper;
+
+    public PaymentController(PaymentRepository paymentRepository, PaymentMapper paymentMapper) {
+        this.paymentRepository = paymentRepository;
+        this.paymentMapper = paymentMapper;
+    }
+
+    @PostMapping
+    public ResponseEntity<PaymentDto> createPayment(@RequestBody PaymentDto paymentDto) {
+        Payment payment = paymentMapper.toEntity(paymentDto);
+        Payment savedPayment = paymentRepository.save(payment);
+        return new ResponseEntity<>(paymentMapper.toDto(savedPayment), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PaymentDto> getPaymentById(@PathVariable Long id) {
+        Payment payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new PaymentNotFoundException("Payment not found for id: " + id));
+        return ResponseEntity.ok(paymentMapper.toDto(payment));
+    }
+}

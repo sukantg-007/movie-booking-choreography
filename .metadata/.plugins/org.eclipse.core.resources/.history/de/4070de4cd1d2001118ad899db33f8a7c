@@ -1,0 +1,36 @@
+package org.vedantacomp.booking.config;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.support.RestClientAdapter;
+import org.springframework.web.service.invoker.HttpServiceProxyFactory;
+import org.vedantacomp.booking.client.ShowServiceClient;
+
+@Configuration
+public class ClientConfig {
+
+    @Value("${services.show-service.url}")
+    private String showServiceUrl;
+
+    @Bean
+    @LoadBalanced
+    public RestClient.Builder loadBalancedRestClientBuilder() {
+        return RestClient.builder();
+    }
+
+    @Bean
+    public ShowServiceClient showServiceClient(RestClient.Builder loadBalancedRestClientBuilder) {
+        RestClient restClient = loadBalancedRestClientBuilder
+                .baseUrl(showServiceUrl)
+                .build();
+
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory
+                .builderFor(RestClientAdapter.create(restClient))
+                .build();
+
+        return factory.createClient(ShowServiceClient.class);
+    }
+}

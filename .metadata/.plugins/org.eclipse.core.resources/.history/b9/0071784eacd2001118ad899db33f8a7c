@@ -1,0 +1,20 @@
+package org.vedantacomp.seat.dto;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import lombok.Builder;
+
+@Builder
+public record SeatDto (
+		Long id,
+		UUID sagaId,
+		Long bookingId,
+		Long showId,
+		String seatNumber,
+		SeatStatus status,
+		Long amount,
+		LocalDateTime createdAt
+		
+		) {
+}

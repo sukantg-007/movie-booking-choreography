@@ -1,0 +1,14 @@
+package org.vedantacomp.saga.dto;
+
+import java.math.BigDecimal;
+
+public record SagaCompensationCommand(
+		Long sagaId,
+		Long bookingId,
+		String failureReason,
+		String seatNumber,
+		BigDecimal amount,
+		SagaStatus status		
+		) {
+
+}

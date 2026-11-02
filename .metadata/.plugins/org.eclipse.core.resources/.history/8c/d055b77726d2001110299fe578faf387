@@ -1,0 +1,22 @@
+package org.vedantacomp.saga.client;
+
+import org.springframework.stereotype.Component;
+import org.vedantacomp.saga.dto.BookingCreatedEvent;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+public class SagaOrchestratorReplyListener {
+
+	//1. Listen to the booking created event from the booking service
+	public void handleBookingCreatedEvent(BookingCreatedEvent event) {
+		log.info("Received booking created event from BOOKING-SERVICE: {} ", event);
+		// Handle the booking created event
+	}
+	
+	
+	//2. Listen to the seat allocated REPLY from the seat allocation service
+	
+	//3. Listen to the payment completed REPLY from the payment service
+}

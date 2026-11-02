@@ -1,0 +1,19 @@
+package org.vedantacomp.payment.mapper;
+
+import java.util.List;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.vedantacomp.common.dto.PaymentDto;
+import org.vedantacomp.payment.entity.Payment;
+
+@Mapper(componentModel = "spring")
+public interface PaymentMapper {
+
+	@Mapping(target= "sagaId", ignore = true)
+    PaymentDto toDto(Payment payment);
+
+    Payment toEntity(PaymentDto paymentDto);
+    
+    List<PaymentDto> toDtoList(List<Payment> payments);
+}

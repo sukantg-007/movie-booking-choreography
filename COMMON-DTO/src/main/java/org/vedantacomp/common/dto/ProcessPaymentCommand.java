@@ -1,0 +1,15 @@
+package org.vedantacomp.common.dto;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+import lombok.Builder;
+
+@Builder
+public record ProcessPaymentCommand(
+		UUID sagaId,
+		Long bookingId,
+		Long seatId,
+		String seatNumber,
+		BigDecimal amount		
+		) {}

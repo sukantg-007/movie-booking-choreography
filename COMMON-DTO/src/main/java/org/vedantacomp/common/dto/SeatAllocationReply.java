@@ -1,0 +1,18 @@
+package org.vedantacomp.common.dto;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+import lombok.Builder;
+
+@Builder
+public record SeatAllocationReply(
+		UUID sagaId,
+		Long bookingId,
+		Long seatId,
+		Long showId,
+		String seatNumber,
+		SeatStatus status,
+		BigDecimal amount,
+		String failureReason
+		) {}

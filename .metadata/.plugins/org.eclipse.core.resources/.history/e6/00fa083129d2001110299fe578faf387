@@ -1,0 +1,25 @@
+package org.vedantacomp.saga.client;
+
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+public class SagaOrchestratorCommandPublisher {
+	
+	private final KafkaTemplate<String, Object> kafkaTemplate;
+	
+	//1. Publish SEAT ALLOCATION COMMAND to the seat allocation service
+	
+	//2. Publish PAYMENT COMMAND to the payment service OR
+	
+	//3. Publish SAGA COMPENSATION COMMAND to the booking service in case of 
+	//failure OF SEAT ALLOCATION FAILURE OR PAYMENT FAILURE
+	
+	//4. Publish SEAT DEALLOCATION COMMAND to the seat allocation service in case of PAYMENT FAILURE
+	
+	//5. 
+	
+}

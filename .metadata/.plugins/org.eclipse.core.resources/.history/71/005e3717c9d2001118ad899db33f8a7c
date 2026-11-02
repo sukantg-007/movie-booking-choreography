@@ -1,0 +1,24 @@
+package org.vedantacomp.show.service;
+
+import org.springframework.stereotype.Service;
+import org.vedantacomp.show.dto.ShowDto;
+import org.vedantacomp.show.repository.ShowRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@Service
+public class ShowServiceImpl implements ShowService {
+	
+	private final ShowRepository showRepository;
+
+
+	@Override
+	public ShowDto getShowById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

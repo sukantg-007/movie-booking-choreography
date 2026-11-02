@@ -1,0 +1,30 @@
+package org.vedantacomp.seat.service;
+
+import org.springframework.stereotype.Service;
+import org.vedantacomp.seat.dto.SeatDto;
+import org.vedantacomp.seat.mapper.SeatMapper;
+import org.vedantacomp.seat.repository.SeatRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Slf4j
+@Service
+public class SagaServiceImpl implements SeatService {
+	
+	private final SeatRepository seatRepository;
+	private final SeatMapper seatMapper;
+
+	@Override
+	public void createSeat(SeatDto seatDto) {
+		return null;
+	}
+
+	@Override
+	public SeatDto getSeatById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
